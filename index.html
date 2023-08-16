@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3dModel</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="three.js"></script>
+    <script type="module" src="GLTFLoader.js"></script>
+    <script type="module">
+      import { GLTFLoader } from "./GLTFLoader.js";
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.01,
+        1000
+      );
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      let loader = new GLTFLoader();
+
+      let obj;
+      loader.load("piper_pa18.gltf", function (gltf) {
+        obj = gltf.scene;
+        scene.add(gltf.scene);
+      });
+      scene.background = new THREE.Color(0xffffff);
+      let light = new THREE.HemisphereLight(0xffffff, 0x000000, 10);
+      scene.add(light);
+      camera.position.set(0, 0, 12);
+      function animate() {
+        requestAnimationFrame(animate);
+        //obj.rotation.y += 0.01
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      window.addEventListener("click", (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        const intersects = raycaster.intersectObject(obj, true);
+
+        if (intersects.length > 0) {
+          
+          alert('este es el punto')
+        }
+      });
+    </script>
+  </body>
+</html>
