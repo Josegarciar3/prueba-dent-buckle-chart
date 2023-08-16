@@ -49,6 +49,38 @@
       }
       animate();
 
+      let dragging = false;
+      let previousMouseX = 0;
+      let previousMouseY = 0;
+
+      window.addEventListener("mousedown", (event) => {
+        dragging = true;
+        previousMouseX = event.clientX;
+        previousMouseY = event.clientY;
+
+      });
+
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+      });
+
+      window.addEventListener("mousemove", (event) => {
+        if (dragging) {
+          const mouseX = event.clientX;
+          const mouseY = event.clientY;
+          const deltaX = mouseX - previousMouseX;
+          const deltaY = mouseY - previousMouseY;
+          previousMouseX = mouseX;
+          previousMouseY = mouseY;
+
+          // Ajusta la velocidad de rotación según tus preferencias
+          const rotationSpeed = 0.005;
+
+          obj.rotation.y += deltaX * rotationSpeed;
+          obj.rotation.x += deltaY * rotationSpeed;
+        }
+      });
+
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
 
@@ -61,8 +93,7 @@
         const intersects = raycaster.intersectObject(obj, true);
 
         if (intersects.length > 0) {
-          
-          alert('este es el punto')
+          alert("este es el punto");
         }
       });
     </script>
